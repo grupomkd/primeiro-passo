@@ -7,30 +7,24 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0a0a0a; min-height: 100vh; color: #fff; }
-
   .header { background: #000; padding: 28px 20px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.06); }
   .header img { width: 90px; height: auto; margin-bottom: 10px; }
   .header h1 { font-size: 20px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
   .header p { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 3px; }
-
   .tabs { display: flex; background: #000; border-bottom: 1px solid rgba(255,255,255,0.08); }
   .tab { flex: 1; padding: 14px 8px; text-align: center; font-size: 13px; font-weight: 500; cursor: pointer; color: rgba(255,255,255,0.35); border-bottom: 2px solid transparent; transition: all 0.2s; }
   .tab.active { color: #1D9E75; border-bottom-color: #1D9E75; }
   .tab.admin-tab { color: rgba(255,255,255,0.2); font-size: 11px; }
   .tab.admin-tab.active { color: #f59e0b; border-bottom-color: #f59e0b; }
-
   .screen { display: none; padding: 24px 20px; max-width: 480px; margin: 0 auto; }
   .screen.active { display: block; }
-
   .form-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 4px; }
   .form-sub { font-size: 13px; color: rgba(255,255,255,0.35); margin-bottom: 24px; }
-
   .form-group { margin-bottom: 16px; }
   .form-group label { display: block; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); margin-bottom: 7px; letter-spacing: 0.04em; text-transform: uppercase; }
   .form-group input { width: 100%; padding: 13px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; font-size: 15px; outline: none; transition: border-color 0.2s; background: rgba(255,255,255,0.05); color: #fff; }
   .form-group input::placeholder { color: rgba(255,255,255,0.2); }
   .form-group input:focus { border-color: #1D9E75; background: rgba(29,158,117,0.05); }
-
   .btn { width: 100%; padding: 15px; background: #1D9E75; color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
   .btn:hover { background: #178a64; }
   .btn:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed; }
@@ -40,22 +34,18 @@
   .btn.amber:hover { background: #d97706; }
   .btn.danger { background: #ef4444; }
   .btn.danger:hover { background: #dc2626; }
-
   .success-msg { display: none; text-align: center; padding: 40px 20px; }
   .success-icon { font-size: 56px; margin-bottom: 16px; }
   .success-msg h2 { color: #fff; font-size: 20px; margin-bottom: 8px; }
   .success-msg p { color: rgba(255,255,255,0.45); font-size: 14px; line-height: 1.6; }
   .success-msg .btn { margin-top: 24px; }
-
   .opt-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.5); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 10px; }
   .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
   .opt-btn { padding: 11px; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; background: rgba(255,255,255,0.04); font-size: 13px; cursor: pointer; text-align: center; transition: all 0.15s; color: rgba(255,255,255,0.5); }
   .opt-btn.selected { border-color: #1D9E75; background: rgba(29,158,117,0.12); color: #1D9E75; font-weight: 500; }
-
   .ranking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
   .ranking-header h2 { font-size: 18px; font-weight: 600; }
   .ranking-header span { font-size: 13px; color: rgba(255,255,255,0.35); }
-
   .ranking-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; }
   .ranking-pos { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
   .pos-1 { background: #FFD700; color: #5a4400; }
@@ -70,16 +60,11 @@
   .ranking-total { text-align: right; }
   .ranking-total .num { font-size: 22px; font-weight: 700; color: #1D9E75; }
   .ranking-total .lab { font-size: 11px; color: rgba(255,255,255,0.25); }
-
   .loading { text-align: center; padding: 48px; color: rgba(255,255,255,0.2); font-size: 14px; }
-
-  /* FECHADO */
   .checkin-fechado { text-align: center; padding: 48px 24px; }
   .checkin-fechado .icon { font-size: 52px; margin-bottom: 16px; }
   .checkin-fechado h2 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 8px; }
   .checkin-fechado p { font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.6; }
-
-  /* ADMIN */
   .admin-login { max-width: 320px; margin: 40px auto; }
   .status-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; margin-bottom: 20px; text-align: center; }
   .status-card .status-label { font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
@@ -100,12 +85,11 @@
 
 <div class="tabs">
   <div class="tab active" id="tab-cadastro" onclick="showTab('cadastro', this)">Primeira vez</div>
-  <div class="tab" id="tab-checkin" onclick="showTab('checkin', this)">Já sou da família</div>
+  <div class="tab" id="tab-checkin" onclick="showTab('checkin', this)">Ja sou da familia</div>
   <div class="tab" id="tab-ranking" onclick="showTab('ranking', this)">Ranking</div>
-  <div class="tab admin-tab" id="tab-admin" onclick="showTab('admin', this)">⚙</div>
+  <div class="tab admin-tab" id="tab-admin" onclick="showTab('admin', this)">&#9881;</div>
 </div>
 
-<!-- CADASTRO -->
 <div id="screen-cadastro" class="screen active">
   <div id="form-cadastro">
     <br>
@@ -120,7 +104,7 @@
       <div class="opt-label">Como conheceu o Primeiro Passo?</div>
       <div class="opt-grid">
         <div class="opt-btn" onclick="selOpt(this,'Instagram')">Instagram</div>
-        <div class="opt-btn" onclick="selOpt(this,'Indicação de amigo')">Indicação de amigo</div>
+        <div class="opt-btn" onclick="selOpt(this,'Indicacao de amigo')">Indicacao de amigo</div>
         <div class="opt-btn" onclick="selOpt(this,'Passou na rua')">Passou na rua</div>
         <div class="opt-btn" onclick="selOpt(this,'Outro')">Outro</div>
       </div>
@@ -128,37 +112,35 @@
     <button class="btn" onclick="enviarCadastro()">Fazer cadastro</button>
   </div>
   <div id="success-cadastro" class="success-msg">
-    <div class="success-icon">✅</div>
+    <div class="success-icon">&#10003;</div>
     <h2>Cadastro realizado!</h2>
-    <p>Bem-vindo(a) à família Primeiro Passo.<br>Bom domingo de caminhada!</p>
+    <p>Bem-vindo(a) a familia Primeiro Passo.<br>Bom domingo de caminhada!</p>
     <button class="btn" onclick="resetForm('cadastro')">Novo cadastro</button>
   </div>
 </div>
 
-<!-- CHECK-IN -->
 <div id="screen-checkin" class="screen">
   <div id="checkin-fechado-msg" class="checkin-fechado" style="display:none">
-    <div class="icon">🔒</div>
+    <div class="icon">&#128274;</div>
     <h2>Check-in fechado</h2>
-    <p>O registro de presença está disponível<br>apenas aos domingos durante a caminhada.</p>
+    <p>O registro de presenca esta disponivel<br>apenas aos domingos durante a caminhada.</p>
   </div>
   <div id="form-checkin">
     <br>
-    <div class="form-title">Registrar presença</div>
-    <div class="form-sub">Não quebra a sequência — marque sua presença</div>
+    <div class="form-title">Registrar presenca</div>
+    <div class="form-sub">Nao quebra a sequencia - marque sua presenca</div>
     <div class="form-group"><label>Nome completo *</label><input type="text" id="k-nome" placeholder="Seu nome"></div>
     <div class="form-group"><label>Telefone *</label><input type="tel" id="k-tel" placeholder="(54) 99999-9999"></div>
-    <button class="btn purple" onclick="enviarCheckin()">Registrar presença</button>
+    <button class="btn purple" onclick="enviarCheckin()">Registrar presenca</button>
   </div>
   <div id="success-checkin" class="success-msg">
-    <div class="success-icon">🏃</div>
-    <h2>Presença confirmada!</h2>
-    <p>Você está no ranking.<br>Até o próximo domingo!</p>
+    <div class="success-icon">&#127939;</div>
+    <h2>Presenca confirmada!</h2>
+    <p>Voce esta no ranking.<br>Ate o proximo domingo!</p>
     <button class="btn purple" onclick="resetForm('checkin')">Novo check-in</button>
   </div>
 </div>
 
-<!-- RANKING -->
 <div id="screen-ranking" class="screen">
   <br>
   <div class="ranking-header">
@@ -168,7 +150,6 @@
   <div id="ranking-lista"><div class="loading">Carregando...</div></div>
 </div>
 
-<!-- ADMIN -->
 <div id="screen-admin" class="screen">
   <div id="admin-login" class="admin-login">
     <br>
@@ -184,9 +165,9 @@
     <div class="form-sub">Controle do check-in</div>
     <div class="status-card">
       <div class="status-label">Status do check-in</div>
-      <div class="status-val" id="admin-status-txt">—</div>
+      <div class="status-val" id="admin-status-txt">-</div>
     </div>
-    <button class="btn" id="btn-toggle" onclick="toggleCheckin()">—</button>
+    <button class="btn" id="btn-toggle" onclick="toggleCheckin()">-</button>
     <div class="admin-info" id="admin-info"></div>
     <div style="text-align:center"><button class="btn-sair" onclick="sairAdmin()">Sair do admin</button></div>
   </div>
@@ -208,8 +189,8 @@ const db = getFirestore(app);
 
 window._opt = '';
 window._adminLogado = false;
+window._checkinAberto = true;
 
-// Verifica status do checkin ao carregar
 async function verificarStatusCheckin() {
   try {
     const snap = await getDoc(doc(db, 'config', 'checkin'));
@@ -231,7 +212,6 @@ function aplicarStatusCheckin(aberto) {
     form.style.display = 'none';
     sucesso.style.display = 'none';
   }
-  // Atualiza painel admin se logado
   if (window._adminLogado) atualizarPainelAdmin(aberto);
 }
 
@@ -239,19 +219,17 @@ function atualizarPainelAdmin(aberto) {
   const txt = document.getElementById('admin-status-txt');
   const btn = document.getElementById('btn-toggle');
   const info = document.getElementById('admin-info');
-  txt.textContent = aberto ? '🟢 Aberto' : '🔴 Fechado';
+  txt.textContent = aberto ? 'Aberto' : 'Fechado';
   txt.className = 'status-val ' + (aberto ? 'status-aberto' : 'status-fechado');
   btn.textContent = aberto ? 'Fechar check-in' : 'Abrir check-in';
   btn.className = 'btn ' + (aberto ? 'danger' : '');
-  info.textContent = aberto
-    ? 'Check-in aberto — participantes podem registrar presença agora.'
-    : 'Check-in fechado — aba "Já sou da família" mostra mensagem de bloqueio.';
+  info.textContent = aberto ? 'Check-in aberto - participantes podem registrar presenca agora.' : 'Check-in fechado - aba mostra mensagem de bloqueio.';
 }
 
 window.toggleCheckin = async () => {
-  const novoStatus = !window._checkinAberto;
-  await setDoc(doc(db, 'config', 'checkin'), { aberto: novoStatus });
-  aplicarStatusCheckin(novoStatus);
+  const novo = !window._checkinAberto;
+  await setDoc(doc(db, 'config', 'checkin'), { aberto: novo });
+  aplicarStatusCheckin(novo);
 };
 
 window.loginAdmin = () => {
@@ -260,7 +238,7 @@ window.loginAdmin = () => {
     window._adminLogado = true;
     document.getElementById('admin-login').style.display = 'none';
     document.getElementById('admin-painel').style.display = 'block';
-    atualizarPainelAdmin(window._checkinAberto !== false);
+    atualizarPainelAdmin(window._checkinAberto);
   } else {
     document.getElementById('admin-erro').style.display = 'block';
   }
@@ -291,34 +269,38 @@ window.showTab = (tab, el) => {
 
 window.enviarCadastro = async () => {
   const nome = document.getElementById('c-nome').value.trim();
-  const tel  = document.getElementById('c-tel').value.trim();
-  if (!nome || !tel) { alert('Nome e telefone são obrigatórios!'); return; }
+  const tel = document.getElementById('c-tel').value.trim();
+  if (!nome || !tel) { alert('Nome e telefone sao obrigatorios!'); return; }
   const btn = document.querySelector('#form-cadastro .btn');
   btn.disabled = true; btn.textContent = 'Enviando...';
   try {
-    await addDoc(collection(db,'cadastros'), {
-      nome, telefone: tel.replace(/\D/g,''),
+    await addDoc(collection(db, 'cadastros'), {
+      nome, telefone: tel.replace(/\D/g, ''),
       email: document.getElementById('c-email').value.trim(),
       nascimento: document.getElementById('c-nasc').value,
       indicadoPor: document.getElementById('c-indicou').value.trim(),
-      comoConheceu: window._opt, timestamp: serverTimestamp()
+      comoConheceu: window._opt,
+      timestamp: serverTimestamp()
     });
-    document.getElementById('form-cadastro').style.display='none';
-    document.getElementById('success-cadastro').style.display='block';
-  } catch(e) { alert('Erro. Tente novamente.'); btn.disabled=false; btn.textContent='Fazer cadastro'; }
+    document.getElementById('form-cadastro').style.display = 'none';
+    document.getElementById('success-cadastro').style.display = 'block';
+  } catch(e) { alert('Erro. Tente novamente.'); btn.disabled = false; btn.textContent = 'Fazer cadastro'; }
 };
 
 window.enviarCheckin = async () => {
   const nome = document.getElementById('k-nome').value.trim();
-  const tel  = document.getElementById('k-tel').value.trim();
-  if (!nome || !tel) { alert('Nome e telefone são obrigatórios!'); return; }
+  const tel = document.getElementById('k-tel').value.trim();
+  if (!nome || !tel) { alert('Nome e telefone sao obrigatorios!'); return; }
   const btn = document.querySelector('#form-checkin .btn');
-  btn.disabled=true; btn.textContent='Enviando...';
+  btn.disabled = true; btn.textContent = 'Enviando...';
   try {
-    await addDoc(collection(db,'checkins'), { nome, telefone: tel.replace(/\D/g,''), timestamp: serverTimestamp() });
-    document.getElementById('form-checkin').style.display='none';
-    document.getElementById('success-checkin').style.display='block';
-  } catch(e) { alert('Erro. Tente novamente.'); btn.disabled=false; btn.textContent='Registrar presença'; }
+    await addDoc(collection(db, 'checkins'), {
+      nome, telefone: tel.replace(/\D/g, ''),
+      timestamp: serverTimestamp()
+    });
+    document.getElementById('form-checkin').style.display = 'none';
+    document.getElementById('success-checkin').style.display = 'block';
+  } catch(e) { alert('Erro. Tente novamente.'); btn.disabled = false; btn.textContent = 'Registrar presenca'; }
 };
 
 window.carregarRanking = async () => {
@@ -326,49 +308,88 @@ window.carregarRanking = async () => {
   lista.innerHTML = '<div class="loading">Carregando...</div>';
   try {
     const pessoas = {};
-    const normTel = t => String(t).replace(/\D/g,'');
-    const domingoDe = ts => { const d = ts.toDate?ts.toDate():new Date(ts); d.setDate(d.getDate()-d.getDay()); return d.toISOString().slice(0,10); };
-    (await getDocs(collection(db,'cadastros'))).forEach(doc => {
-      const d=doc.data(); const tel=normTel(d.telefone); if(!tel) return;
-      if(!pessoas[tel]) pessoas[tel]={nome:d.nome,datas:new Set(),indicadoPor:d.indicadoPor||''};
-      if(d.timestamp) pessoas[tel].datas.add(domingoDe(d.timestamp));
+    const normTel = t => String(t).replace(/\D/g, '');
+
+    // Conta cada CHECK-IN como uma caminhada (por envio, nao por domingo)
+    const snCheckins = await getDocs(collection(db, 'checkins'));
+    snCheckins.forEach(docSnap => {
+      const d = docSnap.data();
+      const tel = normTel(d.telefone);
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { nome: d.nome, total: 0, indicadoPor: '', ultimoTs: null };
+      pessoas[tel].total += 1;
+      const ts = d.timestamp ? d.timestamp.toDate() : new Date(0);
+      if (!pessoas[tel].ultimoTs || ts > pessoas[tel].ultimoTs) pessoas[tel].ultimoTs = ts;
     });
-    (await getDocs(collection(db,'checkins'))).forEach(doc => {
-      const d=doc.data(); const tel=normTel(d.telefone); if(!tel) return;
-      if(!pessoas[tel]) pessoas[tel]={nome:d.nome,datas:new Set(),indicadoPor:''};
-      if(d.timestamp) pessoas[tel].datas.add(domingoDe(d.timestamp));
+
+    // Cadastros: pega nome e indicadoPor, mas nao conta como caminhada
+    const snCadastros = await getDocs(collection(db, 'cadastros'));
+    snCadastros.forEach(docSnap => {
+      const d = docSnap.data();
+      const tel = normTel(d.telefone);
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { nome: d.nome, total: 0, indicadoPor: d.indicadoPor || '', ultimoTs: null };
+      else {
+        if (d.nome) pessoas[tel].nome = d.nome;
+        if (d.indicadoPor) pessoas[tel].indicadoPor = d.indicadoPor;
+      }
     });
-    const datas=new Set(); Object.values(pessoas).forEach(p=>p.datas.forEach(d=>datas.add(d)));
-    const ultimo=[...datas].sort().pop();
-    const ranking = Object.values(pessoas).map(p=>{
-      const ds=[...p.datas].sort();
-      return {nome:p.nome,total:ds.length,ultima:ds[ds.length-1],ativo:ds[ds.length-1]===ultimo,indicadoPor:p.indicadoPor};
-    }).sort((a,b)=>b.total-a.total);
-    document.getElementById('ranking-count').textContent = ranking.length + ' participante' + (ranking.length!==1?'s':'');
-    if (!ranking.length) { lista.innerHTML='<div class="loading">Nenhuma presença ainda.</div>'; return; }
-    lista.innerHTML = ranking.map((p,i)=>{
-      const pos=i+1;
-      const cls=pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
-      return '<div class="ranking-card"><div class="ranking-pos '+cls+'">'+pos+'</div><div class="ranking-info"><div class="nome">'+p.nome+'</div>'+(p.indicadoPor?'<div class="detalhe">Indicado por '+p.indicadoPor+'</div>':'')+'<span class="'+(p.ativo?'badge-ativo':'badge-sumiu')+'">'+(p.ativo?'Ativo':'Sumiu')+'</span></div><div class="ranking-total"><div class="num">'+p.total+'</div><div class="lab">caminhada'+(p.total!==1?'s':'')+'</div></div></div>';
+
+    // Determina ultimo domingo
+    const hoje = new Date();
+    const diaSemana = hoje.getDay();
+    const ultimoDomingo = new Date(hoje);
+    ultimoDomingo.setDate(hoje.getDate() - diaSemana);
+    ultimoDomingo.setHours(0,0,0,0);
+
+    const ranking = Object.values(pessoas)
+      .filter(p => p.total > 0)
+      .map(p => {
+        const ativo = p.ultimoTs && p.ultimoTs >= ultimoDomingo;
+        return { ...p, ativo };
+      })
+      .sort((a, b) => b.total - a.total);
+
+    document.getElementById('ranking-count').textContent = ranking.length + ' participante' + (ranking.length !== 1 ? 's' : '');
+
+    if (!ranking.length) {
+      lista.innerHTML = '<div class="loading">Nenhuma presenca ainda.</div>';
+      return;
+    }
+
+    lista.innerHTML = ranking.map((p, i) => {
+      const pos = i + 1;
+      const cls = pos === 1 ? 'pos-1' : pos === 2 ? 'pos-2' : pos === 3 ? 'pos-3' : 'pos-other';
+      return '<div class="ranking-card">' +
+        '<div class="ranking-pos ' + cls + '">' + pos + '</div>' +
+        '<div class="ranking-info">' +
+          '<div class="nome">' + p.nome + '</div>' +
+          (p.indicadoPor ? '<div class="detalhe">Indicado por ' + p.indicadoPor + '</div>' : '') +
+          '<span class="' + (p.ativo ? 'badge-ativo' : 'badge-sumiu') + '">' + (p.ativo ? 'Ativo' : 'Sumiu') + '</span>' +
+        '</div>' +
+        '<div class="ranking-total">' +
+          '<div class="num">' + p.total + '</div>' +
+          '<div class="lab">caminhada' + (p.total !== 1 ? 's' : '') + '</div>' +
+        '</div></div>';
     }).join('');
-  } catch(e) { lista.innerHTML='<div class="loading">Erro ao carregar.</div>'; }
+  } catch(e) { lista.innerHTML = '<div class="loading">Erro ao carregar.</div>'; console.error(e); }
 };
 
 window.resetForm = (tipo) => {
-  if(tipo==='cadastro'){
-    document.getElementById('form-cadastro').style.display='';
-    document.getElementById('success-cadastro').style.display='none';
-    ['c-nome','c-tel','c-email','c-nasc','c-indicou'].forEach(id=>document.getElementById(id).value='');
-    document.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('selected'));
-    window._opt='';
-    const btn=document.querySelector('#form-cadastro .btn');
-    btn.disabled=false; btn.textContent='Fazer cadastro';
+  if (tipo === 'cadastro') {
+    document.getElementById('form-cadastro').style.display = '';
+    document.getElementById('success-cadastro').style.display = 'none';
+    ['c-nome','c-tel','c-email','c-nasc','c-indicou'].forEach(id => document.getElementById(id).value = '');
+    document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    window._opt = '';
+    const btn = document.querySelector('#form-cadastro .btn');
+    btn.disabled = false; btn.textContent = 'Fazer cadastro';
   } else {
-    document.getElementById('form-checkin').style.display='';
-    document.getElementById('success-checkin').style.display='none';
-    ['k-nome','k-tel'].forEach(id=>document.getElementById(id).value='');
-    const btn=document.querySelector('#form-checkin .btn');
-    btn.disabled=false; btn.textContent='Registrar presença';
+    document.getElementById('form-checkin').style.display = '';
+    document.getElementById('success-checkin').style.display = 'none';
+    ['k-nome','k-tel'].forEach(id => document.getElementById(id).value = '');
+    const btn = document.querySelector('#form-checkin .btn');
+    btn.disabled = false; btn.textContent = 'Registrar presenca';
   }
 };
 
