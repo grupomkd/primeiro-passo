@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primeiro Passo</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; min-height: 100vh; }
+
+  .header { background: #1D9E75; color: white; padding: 20px; text-align: center; }
+  .header h1 { font-size: 24px; font-weight: 600; }
+  .header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+
+  .tabs { display: flex; background: white; border-bottom: 1px solid #e0e0e0; }
+  .tab { flex: 1; padding: 14px; text-align: center; font-size: 14px; font-weight: 500; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .tab.active { color: #1D9E75; border-bottom-color: #1D9E75; }
+
+  .screen { display: none; padding: 20px; max-width: 500px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 6px; }
+  .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 1.5px solid #e0e0e0; border-radius: 10px; font-size: 15px; outline: none; transition: border-color 0.2s; background: white; }
+  .form-group input:focus, .form-group select:focus { border-color: #1D9E75; }
+
+  .btn { width: 100%; padding: 14px; background: #1D9E75; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+  .btn:hover { background: #178a64; }
+  .btn:disabled { background: #aaa; cursor: not-allowed; }
+  .btn.secondary { background: #7F77DD; }
+  .btn.secondary:hover { background: #6a63c0; }
+
+  .success-msg { display: none; text-align: center; padding: 30px 20px; }
+  .success-msg .icon { font-size: 60px; margin-bottom: 12px; }
+  .success-msg h2 { color: #1D9E75; font-size: 20px; margin-bottom: 8px; }
+  .success-msg p { color: #666; font-size: 14px; }
+  .success-msg .btn-novo { margin-top: 20px; }
+
+  .ranking-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .ranking-header h2 { font-size: 18px; font-weight: 600; color: #333; }
+  .ranking-header span { font-size: 13px; color: #888; }
+
+  .ranking-card { background: white; border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  .ranking-pos { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+  .pos-1 { background: #FFD700; color: #7a6000; }
+  .pos-2 { background: #C0C0C0; color: #555; }
+  .pos-3 { background: #CD7F32; color: white; }
+  .pos-other { background: #f0f0f0; color: #888; }
+  .ranking-info { flex: 1; }
+  .ranking-info .nome { font-weight: 600; font-size: 15px; color: #222; }
+  .ranking-info .detalhe { font-size: 12px; color: #888; margin-top: 2px; }
+  .ranking-right { text-align: right; }
+  .ranking-right .total { font-size: 20px; font-weight: 700; color: #1D9E75; }
+  .ranking-right .label { font-size: 11px; color: #aaa; }
+  .badge-ativo { display: inline-block; background: #E1F5EE; color: #0F6E56; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; margin-top: 3px; }
+  .badge-sumiu { display: inline-block; background: #fee; color: #c00; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; margin-top: 3px; }
+
+  .loading { text-align: center; padding: 40px; color: #aaa; font-size: 14px; }
+  .empty { text-align: center; padding: 40px; color: #aaa; font-size: 14px; }
+
+  .opt-label { font-size: 13px; color: #555; font-weight: 500; margin-bottom: 8px; }
+  .opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+  .opt-btn { padding: 10px; border: 1.5px solid #e0e0e0; border-radius: 8px; background: white; font-size: 13px; cursor: pointer; text-align: center; transition: all 0.15s; color: #444; }
+  .opt-btn.selected { border-color: #1D9E75; background: #E1F5EE; color: #0F6E56; font-weight: 500; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🚶 Primeiro Passo</h1>
+  <p>Grupo de caminhada dominical</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('cadastro')">Primeira vez</div>
+  <div class="tab" onclick="showTab('checkin')">Já sou da família</div>
+  <div class="tab" onclick="showTab('ranking')">Ranking</div>
+</div>
+
+<!-- CADASTRO -->
+<div id="screen-cadastro" class="screen active">
+  <div id="form-cadastro">
+    <br>
+    <div class="form-group">
+      <label>Nome completo *</label>
+      <input type="text" id="c-nome" placeholder="Seu nome completo">
+    </div>
+    <div class="form-group">
+      <label>Telefone / WhatsApp *</label>
+      <input type="tel" id="c-tel" placeholder="(54) 99999-9999">
+    </div>
+    <div class="form-group">
+      <label>E-mail</label>
+      <input type="email" id="c-email" placeholder="seu@email.com">
+    </div>
+    <div class="form-group">
+      <label>Data de nascimento</label>
+      <input type="date" id="c-nasc">
+    </div>
+    <div class="form-group">
+      <label>Quem te indicou?</label>
+      <input type="text" id="c-indicou" placeholder="Nome de quem te trouxe">
+    </div>
+    <div class="form-group">
+      <div class="opt-label">Como conheceu o Primeiro Passo?</div>
+      <div class="opt-grid">
+        <div class="opt-btn" onclick="selecionarOpt(this, 'Instagram')">Instagram</div>
+        <div class="opt-btn" onclick="selecionarOpt(this, 'Indicação de amigo')">Indicação de amigo</div>
+        <div class="opt-btn" onclick="selecionarOpt(this, 'Passou na rua')">Passou na rua</div>
+        <div class="opt-btn" onclick="selecionarOpt(this, 'Outro')">Outro</div>
+      </div>
+    </div>
+    <button class="btn" onclick="enviarCadastro()">Fazer cadastro</button>
+  </div>
+  <div id="success-cadastro" class="success-msg">
+    <div class="icon">✅</div>
+    <h2>Cadastro realizado!</h2>
+    <p>Bem-vindo(a) à família Primeiro Passo.<br>Bom domingo de caminhada!</p>
+    <button class="btn btn-novo" onclick="novoCadastro()">Novo cadastro</button>
+  </div>
+</div>
+
+<!-- CHECK-IN -->
+<div id="screen-checkin" class="screen">
+  <div id="form-checkin">
+    <br>
+    <div class="form-group">
+      <label>Nome completo *</label>
+      <input type="text" id="k-nome" placeholder="Seu nome">
+    </div>
+    <div class="form-group">
+      <label>Telefone *</label>
+      <input type="tel" id="k-tel" placeholder="(54) 99999-9999">
+    </div>
+    <button class="btn secondary" onclick="enviarCheckin()">Registrar presença</button>
+  </div>
+  <div id="success-checkin" class="success-msg">
+    <div class="icon">🏃</div>
+    <h2>Presença confirmada!</h2>
+    <p>Não quebra a sequência —<br>você está no ranking!</p>
+    <button class="btn secondary btn-novo" onclick="novoCheckin()">Novo check-in</button>
+  </div>
+</div>
+
+<!-- RANKING -->
+<div id="screen-ranking" class="screen">
+  <br>
+  <div class="ranking-header">
+    <h2>Ranking de frequência</h2>
+    <span id="ranking-data"></span>
+  </div>
+  <div id="ranking-lista"><div class="loading">Carregando...</div></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCVg9BS5CchdfbB3aNvc1z2Rovualv59DU",
+  authDomain: "primeiro-passo-8ae75.firebaseapp.com",
+  projectId: "primeiro-passo-8ae75",
+  storageBucket: "primeiro-passo-8ae75.firebasestorage.app",
+  messagingSenderId: "33238230272",
+  appId: "1:33238230272:web:d18ada14e0f022ede73fe5"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.enviarCadastro = async function() {
+  const nome = document.getElementById('c-nome').value.trim();
+  const tel = document.getElementById('c-tel').value.trim();
+  if (!nome || !tel) { alert('Nome e telefone são obrigatórios!'); return; }
+  const btn = document.querySelector('#form-cadastro .btn');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try {
+    await addDoc(collection(db, 'cadastros'), {
+      nome, telefone: tel.replace(/\D/g,''),
+      email: document.getElementById('c-email').value.trim(),
+      nascimento: document.getElementById('c-nasc').value,
+      indicadoPor: document.getElementById('c-indicou').value.trim(),
+      comoConheceu: window._optSelecionada || '',
+      timestamp: serverTimestamp()
+    });
+    document.getElementById('form-cadastro').style.display = 'none';
+    document.getElementById('success-cadastro').style.display = 'block';
+  } catch(e) { alert('Erro ao salvar. Tente novamente.'); btn.disabled = false; btn.textContent = 'Fazer cadastro'; }
+};
+
+window.enviarCheckin = async function() {
+  const nome = document.getElementById('k-nome').value.trim();
+  const tel = document.getElementById('k-tel').value.trim();
+  if (!nome || !tel) { alert('Nome e telefone são obrigatórios!'); return; }
+  const btn = document.querySelector('#form-checkin .btn');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  try {
+    await addDoc(collection(db, 'checkins'), {
+      nome, telefone: tel.replace(/\D/g,''),
+      timestamp: serverTimestamp()
+    });
+    document.getElementById('form-checkin').style.display = 'none';
+    document.getElementById('success-checkin').style.display = 'block';
+  } catch(e) { alert('Erro ao salvar. Tente novamente.'); btn.disabled = false; btn.textContent = 'Registrar presença'; }
+};
+
+window.carregarRanking = async function() {
+  const lista = document.getElementById('ranking-lista');
+  lista.innerHTML = '<div class="loading">Carregando...</div>';
+  try {
+    const pessoas = {};
+    const normTel = t => String(t).replace(/\D/g,'');
+    const domingoDe = ts => { const d = ts.toDate ? ts.toDate() : new Date(ts); d.setDate(d.getDate()-d.getDay()); return d.toISOString().slice(0,10); };
+
+    const snCadastros = await getDocs(collection(db, 'cadastros'));
+    snCadastros.forEach(doc => {
+      const d = doc.data();
+      const tel = normTel(d.telefone);
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { nome: d.nome, datas: new Set(), indicadoPor: d.indicadoPor||'' };
+      if (d.timestamp) pessoas[tel].datas.add(domingoDe(d.timestamp));
+    });
+
+    const snCheckins = await getDocs(collection(db, 'checkins'));
+    snCheckins.forEach(doc => {
+      const d = doc.data();
+      const tel = normTel(d.telefone);
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { nome: d.nome, datas: new Set(), indicadoPor: '' };
+      if (d.timestamp) pessoas[tel].datas.add(domingoDe(d.timestamp));
+    });
+
+    const todasDatas = new Set();
+    Object.values(pessoas).forEach(p => p.datas.forEach(d => todasDatas.add(d)));
+    const ultimoDomingo = [...todasDatas].sort().pop();
+
+    const ranking = Object.values(pessoas).map(p => {
+      const ds = [...p.datas].sort();
+      return { nome: p.nome, total: ds.length, ultima: ds[ds.length-1], ativo: ds[ds.length-1]===ultimoDomingo, indicadoPor: p.indicadoPor };
+    }).sort((a,b) => b.total-a.total);
+
+    if (ranking.length === 0) { lista.innerHTML = '<div class="empty">Nenhuma presença registrada ainda.</div>'; return; }
+
+    document.getElementById('ranking-data').textContent = `${ranking.length} participante${ranking.length>1?'s':''}`;
+
+    lista.innerHTML = ranking.map((p,i) => {
+      const pos = i+1;
+      const cls = pos===1?'pos-1':pos===2?'pos-2':pos===3?'pos-3':'pos-other';
+      return `<div class="ranking-card">
+        <div class="ranking-pos ${cls}">${pos}</div>
+        <div class="ranking-info">
+          <div class="nome">${p.nome}</div>
+          <div class="detalhe">${p.indicadoPor ? `Indicado por ${p.indicadoPor}` : ''}</div>
+          <span class="${p.ativo?'badge-ativo':'badge-sumiu'}">${p.ativo?'Ativo':'Sumiu'}</span>
+        </div>
+        <div class="ranking-right">
+          <div class="total">${p.total}</div>
+          <div class="label">caminhada${p.total>1?'s':''}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { lista.innerHTML = '<div class="empty">Erro ao carregar ranking.</div>'; }
+};
+
+window.showTab = function(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('screen-'+tab).classList.add('active');
+  if (tab === 'ranking') window.carregarRanking();
+};
+
+window.selecionarOpt = function(el, val) {
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  window._optSelecionada = val;
+};
+
+window.novoCadastro = function() {
+  document.getElementById('form-cadastro').style.display = '';
+  document.getElementById('success-cadastro').style.display = 'none';
+  document.getElementById('c-nome').value = '';
+  document.getElementById('c-tel').value = '';
+  document.getElementById('c-email').value = '';
+  document.getElementById('c-nasc').value = '';
+  document.getElementById('c-indicou').value = '';
+  window._optSelecionada = '';
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  const btn = document.querySelector('#form-cadastro .btn');
+  btn.disabled = false; btn.textContent = 'Fazer cadastro';
+};
+
+window.novoCheckin = function() {
+  document.getElementById('form-checkin').style.display = '';
+  document.getElementById('success-checkin').style.display = 'none';
+  document.getElementById('k-nome').value = '';
+  document.getElementById('k-tel').value = '';
+  const btn = document.querySelector('#form-checkin .btn');
+  btn.disabled = false; btn.textContent = 'Registrar presença';
+};
+</script>
+</body>
+</html>
