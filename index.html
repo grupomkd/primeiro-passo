@@ -650,74 +650,13 @@ async function carregarRanking() {
 }
 
 
-const BACKEND = "http://localhost:3001";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxLAPukixiaZQVdFZKdahbcG0s7qHhazeSbzJUx_4byVBOv-KaxOdLYizoaICKySMQq6A/exec";
 
 async function syncPlanilha() {
   try {
-    const normTel = t => String(t).replace(/\D/g, "");
-    
-    // Busca todos os dados
-    const [snapC, snapK] = await Promise.all([
-      getDocs(collection(db, "cadastros")),
-      getDocs(collection(db, "checkins"))
-    ]);
-    
-    const cadastros = [];
-    snapC.forEach(d => {
-      const data = d.data();
-      cadastros.push({
-        timestamp: data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString("pt-BR") : "",
-        nome: data.nome || "",
-        telefone: data.telefone || "",
-        email: data.email || "",
-        nascimento: data.nascimento || "",
-        indicadoPor: data.indicadoPor || "",
-        comoConheceu: data.comoConheceu || ""
-      });
-    });
-
-    const checkins = [];
-    const pessoas = {};
-    snapK.forEach(d => {
-      const data = d.data();
-      const tel = normTel(data.telefone);
-      checkins.push({
-        timestamp: data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString("pt-BR") : "",
-        nome: data.nome || "",
-        telefone: data.telefone || ""
-      });
-      if (!tel) return;
-      if (!pessoas[tel]) pessoas[tel] = { nome: data.nome, total: 0, indicadoPor: "", ultimoTs: null };
-      pessoas[tel].total++;
-      const ts = data.timestamp ? data.timestamp.toDate() : new Date(0);
-      if (!pessoas[tel].ultimoTs || ts > pessoas[tel].ultimoTs) pessoas[tel].ultimoTs = ts;
-    });
-
-    snapC.forEach(d => {
-      const data = d.data();
-      const tel = normTel(data.telefone);
-      if (!tel) return;
-      if (!pessoas[tel]) pessoas[tel] = { nome: data.nome, total: 0, indicadoPor: data.indicadoPor || "", ultimoTs: null };
-      else { if (data.indicadoPor) pessoas[tel].indicadoPor = data.indicadoPor; }
-    });
-
-    const hoje = new Date(); const ult = new Date(hoje);
-    ult.setDate(hoje.getDate() - hoje.getDay()); ult.setHours(0,0,0,0);
-
-    const ranking = Object.values(pessoas).filter(p => p.total > 0).map(p => ({
-      nome: p.nome,
-      total: p.total,
-      ultima: p.ultimoTs ? p.ultimoTs.toLocaleDateString("pt-BR") : "",
-      status: p.ultimoTs && p.ultimoTs >= ult ? "Ativo" : "Sumiu",
-      indicadoPor: p.indicadoPor
-    })).sort((a, b) => b.total - a.total);
-
-    await fetch(BACKEND + "/sync", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cadastros, checkins, ranking })
-    });
-    console.log("Planilha sincronizada!");
+    // Chama o Apps Script que já lê o Firebase e atualiza a planilha
+    await fetch(APPS_SCRIPT_URL, { method: "GET", mode: "no-cors" });
+    console.log("Sync planilha solicitado!");
   } catch(e) {
     console.warn("Sync planilha falhou:", e.message);
   }
