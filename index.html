@@ -92,6 +92,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 .btn-aprovar { flex: 1; padding: 10px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .btn-rejeitar { flex: 1; padding: 10px; background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
 .badge-pend { display: inline-block; background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 11px; padding: 2px 8px; border-radius: 99px; margin-left: 6px; }
+.part-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; margin-bottom: 10px; }
+.part-card .part-nome { font-size: 15px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+.part-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.part-field label { display: block; font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 3px; }
+.part-field input { width: 100%; padding: 8px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #fff; font-size: 13px; outline: none; }
+.part-field input:focus { border-color: #1D9E75; }
+.part-field.full { grid-column: 1/-1; }
+.part-actions { display: flex; gap: 8px; }
+.btn-salvar-part { flex: 1; padding: 8px; background: #1D9E75; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.btn-excluir-part { padding: 8px 14px; background: rgba(239,68,68,0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; font-size: 13px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -299,6 +309,7 @@ document.getElementById("btn-login-admin").addEventListener("click", () => {
     document.getElementById("admin-painel").style.display = "block";
     atualizarPainel(_checkinAberto);
     carregarFotosPendentes();
+    carregarParticipantes();
   } else {
     document.getElementById("admin-erro").style.display = "block";
   }
@@ -334,6 +345,7 @@ document.getElementById("btn-cadastro").addEventListener("click", async () => {
     });
     document.getElementById("form-cadastro").style.display = "none";
     document.getElementById("success-cadastro").style.display = "block";
+    syncPlanilha();
   } catch(e) { alert("Erro. Tente novamente."); btn.disabled = false; btn.textContent = "Fazer cadastro"; }
 });
 
@@ -358,6 +370,7 @@ document.getElementById("btn-checkin").addEventListener("click", async () => {
     await addDoc(collection(db, "checkins"), { nome, telefone: tel.replace(/\D/g, ""), timestamp: serverTimestamp() });
     document.getElementById("form-checkin").style.display = "none";
     document.getElementById("success-checkin").style.display = "block";
+    syncPlanilha();
   } catch(e) { alert("Erro. Tente novamente."); btn.disabled = false; btn.textContent = "Registrar presenca"; }
 });
 
@@ -452,6 +465,111 @@ document.getElementById("btn-enviar-foto").addEventListener("click", async () =>
 });
 
 // FOTOS PENDENTES
+async function carregarParticipantes() {
+  const lista = document.getElementById("participantes-lista");
+  lista.innerHTML = '<div class="loading">Carregando...</div>';
+  try {
+    const normTel = t => String(t).replace(/\D/g, "");
+    const pessoas = {};
+    
+    // Conta checkins por telefone
+    const snapK = await getDocs(collection(db, "checkins"));
+    snapK.forEach(d => {
+      const data = d.data();
+      const tel = normTel(data.telefone);
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { checkinIds: [], total: 0, nome: data.nome, telefone: tel };
+      pessoas[tel].checkinIds.push(d.id);
+      pessoas[tel].total++;
+    });
+
+    // Pega dados do cadastro
+    const snapC = await getDocs(collection(db, "cadastros"));
+    const cadMap = {};
+    snapC.forEach(d => {
+      const data = d.data();
+      const tel = normTel(data.telefone);
+      if (!tel) return;
+      cadMap[tel] = { id: d.id, ...data };
+      if (!pessoas[tel]) pessoas[tel] = { checkinIds: [], total: 0, nome: data.nome, telefone: tel };
+      pessoas[tel].cadastroId = d.id;
+      pessoas[tel].nome = data.nome || pessoas[tel].nome;
+      pessoas[tel].email = data.email || "";
+      pessoas[tel].nascimento = data.nascimento || "";
+      pessoas[tel].indicadoPor = data.indicadoPor || "";
+    });
+
+    const lista2 = document.getElementById("participantes-lista");
+    if (!Object.keys(pessoas).length) {
+      lista2.innerHTML = '<div style="text-align:center;padding:20px;color:rgba(255,255,255,0.2);font-size:13px">Nenhum participante</div>';
+      return;
+    }
+
+    lista2.innerHTML = "";
+    Object.values(pessoas).sort((a,b) => b.total - a.total).forEach(p => {
+      const card = document.createElement("div");
+      card.className = "part-card";
+      card.innerHTML = `
+        <div class="part-nome">${p.nome || "Sem nome"} <span style="font-size:12px;color:#1D9E75;font-weight:400">${p.total} caminhada${p.total !== 1 ? "s" : ""}</span></div>
+        <div class="part-fields">
+          <div class="part-field full"><label>Nome</label><input type="text" class="p-nome" value="${p.nome || ""}"></div>
+          <div class="part-field"><label>Telefone</label><input type="text" class="p-tel" value="${p.telefone || ""}"></div>
+          <div class="part-field"><label>Total caminhadas</label><input type="number" class="p-total" value="${p.total}" min="0"></div>
+          <div class="part-field"><label>E-mail</label><input type="text" class="p-email" value="${p.email || ""}"></div>
+          <div class="part-field"><label>Indicado por</label><input type="text" class="p-indicou" value="${p.indicadoPor || ""}"></div>
+        </div>
+        <div class="part-actions">
+          <button class="btn-salvar-part">Salvar</button>
+          <button class="btn-excluir-part">Excluir</button>
+        </div>`;
+
+      card.querySelector(".btn-salvar-part").addEventListener("click", async () => {
+        const novoNome = card.querySelector(".p-nome").value.trim();
+        const novoTotal = parseInt(card.querySelector(".p-total").value) || 0;
+        const novoEmail = card.querySelector(".p-email").value.trim();
+        const novoIndicou = card.querySelector(".p-indicou").value.trim();
+
+        // Atualiza cadastro se existir
+        if (p.cadastroId) {
+          await updateDoc(doc(db, "cadastros", p.cadastroId), { nome: novoNome, email: novoEmail, indicadoPor: novoIndicou });
+        }
+
+        // Ajusta total de checkins
+        const diffTotal = novoTotal - p.total;
+        if (diffTotal > 0) {
+          // Adiciona checkins fictícios
+          for (let i = 0; i < diffTotal; i++) {
+            await addDoc(collection(db, "checkins"), { nome: novoNome, telefone: p.telefone, timestamp: serverTimestamp(), manual: true });
+          }
+        } else if (diffTotal < 0) {
+          // Remove checkins mais antigos
+          const remover = p.checkinIds.slice(0, Math.abs(diffTotal));
+          for (const id of remover) {
+            await deleteDoc(doc(db, "checkins", id));
+          }
+        }
+
+        card.querySelector(".part-nome").textContent = novoNome + " (" + novoTotal + " caminhada" + (novoTotal !== 1 ? "s" : "") + ")";
+        syncPlanilha();
+        alert("Salvo!");
+      });
+
+      card.querySelector(".btn-excluir-part").addEventListener("click", async () => {
+        if (!confirm("Excluir " + p.nome + " e todos os check-ins?")) return;
+        if (p.cadastroId) await deleteDoc(doc(db, "cadastros", p.cadastroId));
+        for (const id of p.checkinIds) await deleteDoc(doc(db, "checkins", id));
+        card.remove();
+        syncPlanilha();
+      });
+
+      lista2.appendChild(card);
+    });
+  } catch(e) { 
+    document.getElementById("participantes-lista").innerHTML = '<div class="loading">Erro ao carregar.</div>';
+    console.error(e);
+  }
+}
+
 async function carregarFotosPendentes() {
   const lista = document.getElementById("fotos-pendentes-lista");
   lista.innerHTML = '<div class="loading">Carregando...</div>';
@@ -525,6 +643,80 @@ async function carregarRanking() {
       return '<div class="ranking-card"><div class="ranking-pos '+cls+'">'+pos+'</div><div class="ranking-info"><div class="nome">'+p.nome+'</div>'+(p.indicadoPor?'<div class="detalhe">Indicado por '+p.indicadoPor+'</div>':'')+'<span class="'+(p.ativo?"badge-ativo":"badge-sumiu")+'">'+(p.ativo?"Ativo":"Sumiu")+'</span></div><div class="ranking-total"><div class="num">'+p.total+'</div><div class="lab">caminhada'+(p.total!==1?"s":"")+'</div></div></div>';
     }).join("");
   } catch(e) { lista.innerHTML = '<div class="loading">Erro ao carregar.</div>'; }
+}
+
+
+const BACKEND = "http://localhost:3001";
+
+async function syncPlanilha() {
+  try {
+    const normTel = t => String(t).replace(/\D/g, "");
+    
+    // Busca todos os dados
+    const [snapC, snapK] = await Promise.all([
+      getDocs(collection(db, "cadastros")),
+      getDocs(collection(db, "checkins"))
+    ]);
+    
+    const cadastros = [];
+    snapC.forEach(d => {
+      const data = d.data();
+      cadastros.push({
+        timestamp: data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString("pt-BR") : "",
+        nome: data.nome || "",
+        telefone: data.telefone || "",
+        email: data.email || "",
+        nascimento: data.nascimento || "",
+        indicadoPor: data.indicadoPor || "",
+        comoConheceu: data.comoConheceu || ""
+      });
+    });
+
+    const checkins = [];
+    const pessoas = {};
+    snapK.forEach(d => {
+      const data = d.data();
+      const tel = normTel(data.telefone);
+      checkins.push({
+        timestamp: data.timestamp ? new Date(data.timestamp.seconds * 1000).toLocaleString("pt-BR") : "",
+        nome: data.nome || "",
+        telefone: data.telefone || ""
+      });
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { nome: data.nome, total: 0, indicadoPor: "", ultimoTs: null };
+      pessoas[tel].total++;
+      const ts = data.timestamp ? data.timestamp.toDate() : new Date(0);
+      if (!pessoas[tel].ultimoTs || ts > pessoas[tel].ultimoTs) pessoas[tel].ultimoTs = ts;
+    });
+
+    snapC.forEach(d => {
+      const data = d.data();
+      const tel = normTel(data.telefone);
+      if (!tel) return;
+      if (!pessoas[tel]) pessoas[tel] = { nome: data.nome, total: 0, indicadoPor: data.indicadoPor || "", ultimoTs: null };
+      else { if (data.indicadoPor) pessoas[tel].indicadoPor = data.indicadoPor; }
+    });
+
+    const hoje = new Date(); const ult = new Date(hoje);
+    ult.setDate(hoje.getDate() - hoje.getDay()); ult.setHours(0,0,0,0);
+
+    const ranking = Object.values(pessoas).filter(p => p.total > 0).map(p => ({
+      nome: p.nome,
+      total: p.total,
+      ultima: p.ultimoTs ? p.ultimoTs.toLocaleDateString("pt-BR") : "",
+      status: p.ultimoTs && p.ultimoTs >= ult ? "Ativo" : "Sumiu",
+      indicadoPor: p.indicadoPor
+    })).sort((a, b) => b.total - a.total);
+
+    await fetch(BACKEND + "/sync", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cadastros, checkins, ranking })
+    });
+    console.log("Planilha sincronizada!");
+  } catch(e) {
+    console.warn("Sync planilha falhou:", e.message);
+  }
 }
 
 verificarStatusCheckin();
